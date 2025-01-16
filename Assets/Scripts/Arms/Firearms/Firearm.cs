@@ -4,11 +4,11 @@ using UnityEngine;
 public abstract class Firearm : MonoBehaviour
 {
     public WeaponData weaponData; // Datos del arma (ScriptableObject)
-    protected int currentAmmo; // MuniciÛn actual
+    protected int currentAmmo; // MuniciÔøΩn actual
     private bool isReloading = false; // Control de recarga
     protected float nextFireTime = 0f; // Tiempo hasta el siguiente disparo
 
-    // Propiedad para verificar si est· recargando
+    // Propiedad para verificar si estÔøΩ recargando
     public bool IsReloading => isReloading;
 
     private void Start()
@@ -25,13 +25,13 @@ public abstract class Firearm : MonoBehaviour
             return;
         }
 
-        currentAmmo = weaponData.ammoCapacity; // MuniciÛn inicial
+        currentAmmo = weaponData.ammoCapacity; // MuniciÔøΩn inicial
     }
 
-    // MÈtodo abstracto para disparar
+    // MÔøΩtodo abstracto para disparar
     public abstract void Shoot();
 
-    // Maneja la lÛgica b·sica de disparo
+    // Maneja la lÔøΩgica bÔøΩsica de disparo
     protected void HandleShooting()
     {
         if (Time.time >= nextFireTime && currentAmmo > 0 && !isReloading)
@@ -62,7 +62,10 @@ public abstract class Firearm : MonoBehaviour
             StartCoroutine(ReloadCoroutine());
         }
     }
-
+    public void SetEquippedState(bool isEquipped)
+    {
+        gameObject.SetActive(!isEquipped); // Desactivar el GameObject del arma mientras est√° equipada
+    }
     private IEnumerator ReloadCoroutine()
     {
         isReloading = true;

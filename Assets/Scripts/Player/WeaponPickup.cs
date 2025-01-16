@@ -5,7 +5,7 @@ public class WeaponPickup : MonoBehaviour
     public PlayerWeapon playerWeapon; // Referencia al script de manejo de armas del jugador
 
     private Firearm weaponOnGround;   // Referencia al arma en el suelo
-    private bool isNearWeapon;        // Indica si el jugador est· cerca de un arma
+    private bool isNearWeapon;        // Indica si el jugador est√° cerca de un arma
 
     private void Update()
     {
@@ -14,9 +14,7 @@ public class WeaponPickup : MonoBehaviour
         {
             if (weaponOnGround != null)
             {
-                playerWeapon.EquipWeapon(weaponOnGround); // Equipar el arma directamente
-                weaponOnGround = null;
-                isNearWeapon = false;
+                PickupWeapon();
             }
         }
 
@@ -27,17 +25,44 @@ public class WeaponPickup : MonoBehaviour
         }
     }
 
+    private void PickupWeapon()
+    {
+        Debug.Log("Picking up weapon");
+
+        // Equipar el arma
+        playerWeapon.EquipWeapon(weaponOnGround);
+
+        // Desactivar el Rigidbody2D y colisiones del arma equipada
+        Rigidbody2D rb = weaponOnGround.GetComponent<Rigidbody2D>();
+        if (rb != null) rb.simulated = false;
+
+        Collider2D collider = weaponOnGround.GetComponent<Collider2D>();
+        if (collider != null) collider.enabled = false;
+
+        // Limpiar la referencia al arma en el suelo
+        weaponOnGround = null;
+        isNearWeapon = false;
+    }
+
     private void DropCurrentWeapon()
     {
-        // Obtener el arma actualmente equipada
+        Debug.Log("Dropping weapon");
+
+        // Obtener el arma equipada
         Firearm currentWeapon = playerWeapon.currentWeapon;
 
-        // Liberar el arma del jugador
+        // Soltar el arma equipada
         currentWeapon.transform.SetParent(null);
-        currentWeapon.transform.position = transform.position + transform.forward; // Dejarla frente al jugador
-        currentWeapon.GetComponent<Rigidbody2D>().simulated = true; // Reactivar fÌsicas si las tiene
+        currentWeapon.transform.position = transform.position + transform.forward * 1f; // Colocarla frente al jugador
 
-        // Limpiar la referencia del arma equipada
+        // Reactivar f√≠sicas y colisiones
+        Rigidbody2D rb = currentWeapon.GetComponent<Rigidbody2D>();
+        if (rb != null) rb.simulated = true;
+
+        Collider2D collider = currentWeapon.GetComponent<Collider2D>();
+        if (collider != null) collider.enabled = true;
+
+        // Limpiar el arma equipada del jugador
         playerWeapon.currentWeapon = null;
     }
 
@@ -45,7 +70,7 @@ public class WeaponPickup : MonoBehaviour
     {
         // Detectar si el objeto es un arma
         Firearm firearm = collision.GetComponent<Firearm>();
-        if (firearm != null)
+        if (firearm != null && firearm != playerWeapon.currentWeapon)
         {
             weaponOnGround = firearm;
             isNearWeapon = true;
