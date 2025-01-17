@@ -36,8 +36,20 @@ public abstract class Firearm : Weapon
             return;
         }
 
-        Instantiate(weaponData.bulletPrefab, firepoint.position, firepoint.rotation);
+        // Solicitar un objeto del pool en lugar de instanciarlo
+        GameObject bullet = PoolManager.Instance.RequestObject("Bullet", weaponData.bulletPrefab.name);
+
+        if (bullet != null)
+        {
+            bullet.transform.position = firepoint.position;
+            bullet.transform.rotation = firepoint.rotation;
+        }
+        else
+        {
+            Debug.LogError("No se pudo obtener un proyectil del pool.");
+        }
     }
+
 
     public void Reload()
     {

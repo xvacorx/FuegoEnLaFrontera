@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -8,8 +9,7 @@ public class Bullet : MonoBehaviour
 
     private void Start()
     {
-        // Destruir la bala despu�s de un tiempo
-        Destroy(gameObject, lifetime);
+
     }
 
     private void Update()
@@ -30,8 +30,5 @@ public class Bullet : MonoBehaviour
                 enemy.TakeDamage(damage);
             }
         }
-
-        // Destruir la bala al impactar con algo
-        Destroy(gameObject);
     }
 }

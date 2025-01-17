@@ -24,10 +24,22 @@ public class Shotgun : Firearm
             return;
         }
 
-        // Calcular el �ngulo de dispersi�n
+        // Calcular el ángulo de dispersión
         float spreadAngle = Random.Range(-weaponData.spread, weaponData.spread);
         Quaternion spreadRotation = Quaternion.Euler(0, 0, spreadAngle);
-        Instantiate(weaponData.bulletPrefab, firepoint.position, firepoint.rotation * spreadRotation);
 
+        // Solicitar un objeto del pool
+        GameObject bullet = PoolManager.Instance.RequestObject("Bullet", weaponData.bulletPrefab.name);
+
+        if (bullet != null)
+        {
+            // Configurar posición y rotación del proyectil
+            bullet.transform.position = firepoint.position;
+            bullet.transform.rotation = firepoint.rotation * spreadRotation;
+        }
+        else
+        {
+            Debug.LogError("No se pudo obtener un proyectil del pool.");
+        }
     }
 }
