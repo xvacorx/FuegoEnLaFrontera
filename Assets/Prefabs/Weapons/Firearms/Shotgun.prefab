@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1527957930000803161}
   - component: {fileID: 4618274931585996669}
   - component: {fileID: 1549970059330197843}
+  - component: {fileID: 3847083696567330214}
   m_Layer: 0
   m_Name: Shotgun
   m_TagString: Weapon
@@ -48,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 17519f9ca12c3ec44b17d522b93db68d, type: 2}
+  firepoint: {fileID: 4791109819559326661}
 --- !u!58 &1549970059330197843
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -84,6 +86,33 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.2}
   m_Radius: 0.25
+--- !u!50 &3847083696567330214
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2564595614584343001}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &5246261279431861207
 GameObject:
   m_ObjectHideFlags: 0

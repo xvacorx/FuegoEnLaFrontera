@@ -18,15 +18,16 @@ public class Shotgun : Firearm
 
     private void SpawnBulletWithSpread()
     {
-        if (weaponData.firePoint == null)
+        if (firepoint == null)
         {
             Debug.LogError("FirePoint no asignado en " + gameObject.name);
             return;
         }
 
-        // Calcular el ángulo de dispersión
+        // Calcular el ï¿½ngulo de dispersiï¿½n
         float spreadAngle = Random.Range(-weaponData.spread, weaponData.spread);
-        Quaternion spreadRotation = Quaternion.Euler(0, spreadAngle, 0);
-        Instantiate(weaponData.bulletPrefab, weaponData.firePoint.position, weaponData.firePoint.rotation * spreadRotation);
+        Quaternion spreadRotation = Quaternion.Euler(0, 0, spreadAngle);
+        Instantiate(weaponData.bulletPrefab, firepoint.position, firepoint.rotation * spreadRotation);
+
     }
 }

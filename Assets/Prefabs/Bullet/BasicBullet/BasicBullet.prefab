@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8359065656405287142}
+  - component: {fileID: 7192131564422142528}
   - component: {fileID: 6987493669050326860}
   - component: {fileID: 7260440411879648}
-  - component: {fileID: 7192131564422142528}
   m_Layer: 0
   m_Name: BasicBullet
   m_TagString: Untagged
@@ -35,6 +35,21 @@ Transform:
   - {fileID: 6899014766100935887}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7192131564422142528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1966798567696585799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83b4b58b030ec7b488e9d7e1409e4f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 15
+  damage: 1
+  lifetime: 2
 --- !u!50 &6987493669050326860
 Rigidbody2D:
   serializedVersion: 5
@@ -98,20 +113,6 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.125
---- !u!114 &7192131564422142528
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1966798567696585799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83b4b58b030ec7b488e9d7e1409e4f08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
-  lifetime: 2
 --- !u!1 &2843622657133579104
 GameObject:
   m_ObjectHideFlags: 0

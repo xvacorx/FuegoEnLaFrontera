@@ -3,19 +3,19 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed = 20f; // Velocidad de la bala
-    public int damage = 1;    // Daño que causa
-    public float lifetime = 2f; // Tiempo antes de destruirse automáticamente
+    public int damage = 1;    // Daï¿½o que causa
+    public float lifetime = 2f; // Tiempo antes de destruirse automï¿½ticamente
 
     private void Start()
     {
-        // Destruir la bala después de un tiempo
+        // Destruir la bala despuï¿½s de un tiempo
         Destroy(gameObject, lifetime);
     }
 
     private void Update()
     {
         // Mover la bala hacia adelante
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(Vector3.up * speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -23,7 +23,7 @@ public class Bullet : MonoBehaviour
         // Detectar colisiones con enemigos, paredes, etc.
         if (other.CompareTag("Enemy"))
         {
-            // Aplicar daño al enemigo (puedes usar un script en el enemigo)
+            // Aplicar daï¿½o al enemigo (puedes usar un script en el enemigo)
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)
             {

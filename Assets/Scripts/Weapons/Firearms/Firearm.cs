@@ -4,11 +4,11 @@ using UnityEngine;
 public abstract class Firearm : MonoBehaviour
 {
     public WeaponData weaponData; // Datos del arma (ScriptableObject)
-    protected int currentAmmo; // Munici�n actual
+    [SerializeField] protected Transform firepoint;
+    [SerializeField] protected int currentAmmo; // Munición actual
     private bool isReloading = false; // Control de recarga
     protected float nextFireTime = 0f; // Tiempo hasta el siguiente disparo
 
-    // Propiedad para verificar si est� recargando
     public bool IsReloading => isReloading;
 
     private void Start()
@@ -16,7 +16,6 @@ public abstract class Firearm : MonoBehaviour
         InitializeWeapon();
     }
 
-    // Inicializa el arma
     private void InitializeWeapon()
     {
         if (weaponData == null)
@@ -25,13 +24,11 @@ public abstract class Firearm : MonoBehaviour
             return;
         }
 
-        currentAmmo = weaponData.ammoCapacity; // Munici�n inicial
+        currentAmmo = weaponData.ammoCapacity;
     }
 
-    // M�todo abstracto para disparar
     public abstract void Shoot();
 
-    // Maneja la l�gica b�sica de disparo
     protected void HandleShooting()
     {
         if (Time.time >= nextFireTime && currentAmmo > 0 && !isReloading)
@@ -42,19 +39,17 @@ public abstract class Firearm : MonoBehaviour
         }
     }
 
-    // Instancia la bala
     protected virtual void SpawnBullet()
     {
-        if (weaponData.firePoint == null)
+        if (firepoint == null)
         {
             Debug.LogError("FirePoint no asignado en " + gameObject.name);
             return;
         }
 
-        Instantiate(weaponData.bulletPrefab, weaponData.firePoint.position, weaponData.firePoint.rotation);
+        Instantiate(weaponData.bulletPrefab, firepoint.position, firepoint.rotation);
     }
 
-    // Recarga el arma
     public void Reload()
     {
         if (!isReloading && currentAmmo < weaponData.ammoCapacity)
@@ -62,10 +57,7 @@ public abstract class Firearm : MonoBehaviour
             StartCoroutine(ReloadCoroutine());
         }
     }
-    public void SetEquippedState(bool isEquipped)
-    {
-        gameObject.SetActive(!isEquipped); // Desactivar el GameObject del arma mientras está equipada
-    }
+
     private IEnumerator ReloadCoroutine()
     {
         isReloading = true;
