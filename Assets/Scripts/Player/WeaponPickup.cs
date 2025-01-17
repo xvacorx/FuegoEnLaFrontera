@@ -43,7 +43,7 @@ public class WeaponPickup : MonoBehaviour
         Debug.Log("Dropping weapon");
 
         // Soltar el arma equipada
-        playerWeapon.EquipWeapon(null);
+        playerWeapon.DropWeapon(playerWeapon.currentWeapon);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

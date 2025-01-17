@@ -37,7 +37,7 @@ public class PlayerWeapon : MonoBehaviour
     /// Suelta el arma equipada y la coloca en el suelo.
     /// </summary>
     /// <param name="weapon">El arma equipada.</param>
-    private void DropWeapon(Firearm weapon)
+    public void DropWeapon(Firearm weapon)
     {
         weapon.transform.SetParent(null); // Eliminar como hijo del jugador
         weapon.transform.position = transform.position + transform.forward * 1f; // Dejar frente al jugador
@@ -48,6 +48,8 @@ public class PlayerWeapon : MonoBehaviour
 
         Collider2D collider = weapon.GetComponent<Collider2D>();
         if (collider != null) collider.enabled = true;
+
+        currentWeapon = null;
     }
 
     private void Update()
