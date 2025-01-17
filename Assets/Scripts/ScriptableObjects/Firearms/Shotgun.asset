@@ -10,13 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c8ca9b7602ce8742bafc30ff5e5ccd2, type: 3}
-  m_Name: Uzi
+  m_Name: Shotgun
   m_EditorClassIdentifier: 
-  weaponName: Uzi
+  weaponName: Shotgun
+  weaponType: 1
+  icon: {fileID: 0}
+  weaponPrefab: {fileID: 2564595614584343001, guid: bdc669083dcd30242aeeeedda5ad47f5, type: 3}
   bulletPrefab: {fileID: 1966798567696585799, guid: 0bc26dfc0585c88478c8817f7a94f96b, type: 3}
-  firePoint: {fileID: 0}
-  fireRate: 0.5
-  ammoCapacity: 20
-  reloadTime: 2
-  pelletCount: 1
-  spread: 5
+  fireRate: 2
+  ammoCapacity: 2
+  reloadTime: 3
+  pelletCount: 5
+  spread: 10
+  attackRange: 0
+  attackSpeed: 0
+  damage: 0
+  throwForce: 0
+  explosionRadius: 0
+  explosionDamage: 0
+  detonatesOnImpact: 0
+  attackSound: {fileID: 0}
+  attackEffect: {fileID: 0}

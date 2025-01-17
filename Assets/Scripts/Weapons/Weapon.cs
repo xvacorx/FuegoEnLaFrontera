@@ -2,15 +2,24 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
+    public WeaponData weaponData; // Datos del arma (ScriptableObject)
 
+    protected virtual void Start()
+    {
+        InitializeWeapon();
     }
 
-    // Update is called once per frame
-    void Update()
+    protected virtual void InitializeWeapon()
     {
+        if (weaponData == null)
+        {
+            Debug.LogError("WeaponData no asignado en " + gameObject.name);
+            return;
+        }
 
+        Debug.Log($"{weaponData.name} inicializado.");
     }
+
+    // Método abstracto que todas las armas deben implementar
+    public abstract void Attack();
 }

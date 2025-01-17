@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-public abstract class Firearm : MonoBehaviour
+public abstract class Firearm : Weapon
 {
-    public WeaponData weaponData; // Datos del arma (ScriptableObject)
     [SerializeField] protected Transform firepoint;
     [SerializeField] protected int currentAmmo; // Munición actual
     private bool isReloading = false; // Control de recarga
@@ -11,20 +10,10 @@ public abstract class Firearm : MonoBehaviour
 
     public bool IsReloading => isReloading;
 
-    private void Start()
+    protected override void Start()
     {
-        InitializeWeapon();
-    }
-
-    private void InitializeWeapon()
-    {
-        if (weaponData == null)
-        {
-            Debug.LogError("WeaponData no asignado en " + gameObject.name);
-            return;
-        }
-
-        currentAmmo = weaponData.ammoCapacity;
+        base.Start();
+        currentAmmo = weaponData.ammoCapacity; // Inicializar munición específica
     }
 
     public abstract void Shoot();
@@ -64,5 +53,10 @@ public abstract class Firearm : MonoBehaviour
         yield return new WaitForSeconds(weaponData.reloadTime);
         currentAmmo = weaponData.ammoCapacity;
         isReloading = false;
+    }
+
+    public override void Attack()
+    {
+        Shoot();
     }
 }
