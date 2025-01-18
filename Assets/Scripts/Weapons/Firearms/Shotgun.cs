@@ -4,7 +4,7 @@ public class Shotgun : Firearm
 {
     public override void Shoot()
     {
-        if (Time.time >= nextFireTime && currentAmmo > 0 && !IsReloading)
+        if (Time.time >= nextFireTime && currentAmmo > 0)
         {
             nextFireTime = Time.time + 1f / weaponData.fireRate;
             currentAmmo--;

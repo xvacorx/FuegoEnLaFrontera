@@ -61,11 +61,5 @@ public class PlayerWeapon : MonoBehaviour
         {
             currentWeapon.Shoot();
         }
-
-        // Recargar al presionar "R"
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            currentWeapon.Reload();
-        }
     }
 }

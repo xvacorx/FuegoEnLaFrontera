@@ -4,12 +4,19 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed = 20f; // Velocidad de la bala
-    public int damage = 1;    // Da�o que causa
-    public float lifetime = 2f; // Tiempo antes de destruirse autom�ticamente
+    public int damage = 1;    // Daño que causa
+    public float lifetime = 2f; // Tiempo antes de desactivarse automáticamente
 
-    private void Start()
+    private Coroutine disableCoroutine;
+
+    private void OnEnable()
     {
-
+        // Reinicia el estado de la bala cada vez que se activa
+        if (disableCoroutine != null)
+        {
+            StopCoroutine(disableCoroutine);
+        }
+        disableCoroutine = StartCoroutine(DisableAfterDelay());
     }
 
     private void Update()
@@ -23,12 +30,37 @@ public class Bullet : MonoBehaviour
         // Detectar colisiones con enemigos, paredes, etc.
         if (other.CompareTag("Enemy"))
         {
-            // Aplicar da�o al enemigo (puedes usar un script en el enemigo)
+            // Aplicar daño al enemigo
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)
             {
                 enemy.TakeDamage(damage);
             }
+
+            // Desactivar la bala después de impactar
+            DeactivateBullet();
         }
+        else if (other.CompareTag("Wall") || other.CompareTag("Obstacle"))
+        {
+            // Desactivar la bala al impactar con un obstáculo
+            DeactivateBullet();
+        }
+    }
+
+    private IEnumerator DisableAfterDelay()
+    {
+        // Desactivar la bala después del tiempo de vida
+        yield return new WaitForSeconds(lifetime);
+        DeactivateBullet();
+    }
+
+    private void DeactivateBullet()
+    {
+        if (disableCoroutine != null)
+        {
+            StopCoroutine(disableCoroutine);
+            disableCoroutine = null;
+        }
+        gameObject.SetActive(false); // Desactiva el objeto para el pooling
     }
 }

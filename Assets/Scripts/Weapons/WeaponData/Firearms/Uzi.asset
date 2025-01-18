@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 0}
   weaponPrefab: {fileID: 6699479299839517356, guid: 51dc8046f3ef8164ca749fa57d4b7ec0, type: 3}
   bulletPrefab: {fileID: 1966798567696585799, guid: 0bc26dfc0585c88478c8817f7a94f96b, type: 3}
-  fireRate: 0.5
+  fireRate: 10
   ammoCapacity: 20
   reloadTime: 2
   pelletCount: 1

@@ -50,6 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 17519f9ca12c3ec44b17d522b93db68d, type: 2}
   firepoint: {fileID: 4791109819559326661}
+  currentAmmo: 0
 --- !u!58 &1549970059330197843
 CircleCollider2D:
   m_ObjectHideFlags: 0
