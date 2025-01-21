@@ -1,65 +1,95 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 public class PlayerWeapon : MonoBehaviour
 {
-    public Transform weaponHolder; // Lugar donde se equipará el arma
-    public Firearm currentWeapon; // Referencia al arma actualmente equipada
+    public Transform weaponHolder;
+    public Firearm currentWeapon;
+    private InputAction attackAction;
+    private InputAction throwAction;
 
-    /// <summary>
-    /// Equipa directamente el arma que se encuentra en el suelo.
-    /// </summary>
-    /// <param name="weaponOnGround">El arma que el jugador toma del suelo.</param>
-    public void EquipWeapon(Firearm weaponOnGround)
+    private void Awake()
     {
-        // Si ya hay un arma equipada, dejarla en el suelo
-        if (currentWeapon != null)
-        {
-            DropWeapon(currentWeapon);
-        }
-
-        // Asignar el arma del suelo como la actual
-        currentWeapon = weaponOnGround;
-
-        // Configurar el arma para que sea hija del jugador
-        currentWeapon.transform.SetParent(weaponHolder);
-        currentWeapon.transform.localPosition = Vector3.zero;
-        currentWeapon.transform.localRotation = Quaternion.identity;
-
-        // Desactivar físicas y colisiones del arma equipada
-        currentWeapon.GetComponent<Rigidbody2D>().simulated = false;
-        currentWeapon.GetComponent<Collider2D>().enabled = false;
-
-        // Cambiar el estado de activación del arma
-
-        //currentWeapon.SetEquippedState(true);
+        var inputActions = new InputSystem_Actions();
+        attackAction = inputActions.Player.Attack;
+        throwAction = inputActions.Player.Throw;
     }
 
-    /// <summary>
-    /// Suelta el arma equipada y la coloca en el suelo.
-    /// </summary>
-    /// <param name="weapon">El arma equipada.</param>
-    public void DropWeapon(Firearm weapon)
+    private void OnEnable()
     {
-        weapon.transform.SetParent(null); // Eliminar como hijo del jugador
-        weapon.transform.position = transform.position + transform.forward * 1f; // Dejar frente al jugador
+        attackAction.Enable();
+        throwAction.Enable();
+    }
 
-        // Reactivar físicas y colisiones
-        Rigidbody2D rb = weapon.GetComponent<Rigidbody2D>();
-        if (rb != null) rb.simulated = true;
+    private void OnDisable()
+    {
+        attackAction.Disable();
+        throwAction.Disable();
+    }
 
-        Collider2D collider = weapon.GetComponent<Collider2D>();
-        if (collider != null) collider.enabled = true;
+    public void EquipWeapon(Firearm weaponOnGround)
+    {
+        if (currentWeapon != null) DropWeapon();
 
+        currentWeapon = weaponOnGround;
+        AttachWeapon(currentWeapon);
+    }
+
+    public void DropWeapon()
+    {
+        if (currentWeapon == null) return;
+
+        DetachWeapon(currentWeapon);
         currentWeapon = null;
+    }
+
+    private void AttachWeapon(Firearm weapon)
+    {
+        weapon.transform.SetParent(weaponHolder);
+        weapon.transform.localPosition = Vector3.zero;
+        weapon.transform.localRotation = Quaternion.identity;
+
+        if (weapon.TryGetComponent(out Rigidbody2D rb)) rb.simulated = false;
+        if (weapon.TryGetComponent(out Collider2D collider))
+        {
+            collider.enabled = false;
+            collider.isTrigger = true;
+        }
+    }
+
+    private void DetachWeapon(Firearm weapon)
+    {
+        weapon.transform.SetParent(null);
+        weapon.transform.position = transform.position + transform.forward;
+
+        if (weapon.TryGetComponent(out Rigidbody2D rb)) rb.simulated = true;
+        if (weapon.TryGetComponent(out Collider2D collider)) collider.enabled = true;
     }
 
     private void Update()
     {
+        if (currentWeapon != null)
+        {
+            if (attackAction.IsPressed())
+            {
+                currentWeapon.Shoot();
+            }
+
+            if (throwAction.triggered)
+            {
+                ThrowWeapon();
+            }
+        }
+    }
+
+    private void ThrowWeapon()
+    {
         if (currentWeapon == null) return;
 
-        // Disparo al presionar "Fire1"
-        if (Input.GetButtonDown("Fire1"))
-        {
-            currentWeapon.Shoot();
-        }
+        Vector2 throwDirection = (Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - transform.position).normalized;
+        float throwForce = 10f;
+
+        currentWeapon.Throw(throwDirection, throwForce);
+        currentWeapon = null; // Ya no tienes el arma equipada
     }
 }

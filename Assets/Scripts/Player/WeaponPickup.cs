@@ -1,56 +1,57 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 public class WeaponPickup : MonoBehaviour
 {
-    private PlayerWeapon playerWeapon; // Referencia al script de manejo de armas del jugador
-    private Firearm weaponOnGround;   // Referencia al arma en el suelo
-    private bool isNearWeapon;        // Indica si el jugador está cerca de un arma
-    private void Start()
+    private PlayerWeapon playerWeapon;
+    private Firearm weaponOnGround;
+    private bool isNearWeapon;
+
+    private InputAction interactAction;
+    private InputAction dropAction;
+
+    private void Awake()
     {
-        playerWeapon = GetComponent<PlayerWeapon>();
+        var inputActions = new InputSystem_Actions();
+        interactAction = inputActions.Player.Interact;
+        dropAction = inputActions.Player.Drop;
     }
+
+    private void OnEnable()
+    {
+        interactAction.Enable();
+        dropAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        interactAction.Disable();
+        dropAction.Disable();
+    }
+
+    private void Start() => playerWeapon = GetComponent<PlayerWeapon>();
+
     private void Update()
     {
-        // Recoger el arma al presionar "E"
-        if (isNearWeapon && Input.GetKeyDown(KeyCode.E))
+        if (interactAction.triggered) { Debug.Log("Interaction"); }
+        if (dropAction.triggered) { Debug.Log("Drop Action"); }
+        if (interactAction.triggered && isNearWeapon && weaponOnGround != null)
         {
-            if (weaponOnGround != null)
-            {
-                PickupWeapon();
-            }
+            Debug.Log("Weapon Pickup");
+            playerWeapon.EquipWeapon(weaponOnGround);
+            weaponOnGround = null;
+            isNearWeapon = false;
         }
 
-        // Desechar el arma equipada al presionar "Q"
-        if (Input.GetKeyDown(KeyCode.Q) && playerWeapon.currentWeapon != null)
+        if (dropAction.triggered && playerWeapon.currentWeapon != null)
         {
-            DropCurrentWeapon();
+            playerWeapon.DropWeapon();
         }
-    }
-
-    private void PickupWeapon()
-    {
-        Debug.Log("Picking up weapon");
-
-        // Equipar el arma
-        playerWeapon.EquipWeapon(weaponOnGround);
-
-        // Limpiar la referencia al arma en el suelo
-        weaponOnGround = null;
-        isNearWeapon = false;
-    }
-
-    private void DropCurrentWeapon()
-    {
-        Debug.Log("Dropping weapon");
-
-        // Soltar el arma equipada
-        playerWeapon.DropWeapon(playerWeapon.currentWeapon);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Detectar si el objeto es un arma
-        Firearm firearm = collision.GetComponent<Firearm>();
-        if (firearm != null && firearm != playerWeapon.currentWeapon)
+        if (collision.TryGetComponent(out Firearm firearm) && firearm != playerWeapon.currentWeapon)
         {
             weaponOnGround = firearm;
             isNearWeapon = true;
@@ -59,9 +60,7 @@ public class WeaponPickup : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        // Salir del rango del arma
-        Firearm firearm = collision.GetComponent<Firearm>();
-        if (firearm == weaponOnGround)
+        if (collision.TryGetComponent(out Firearm firearm) && firearm == weaponOnGround)
         {
             weaponOnGround = null;
             isNearWeapon = false;
