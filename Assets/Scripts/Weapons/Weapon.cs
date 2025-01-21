@@ -55,7 +55,6 @@ public abstract class Weapon : MonoBehaviour
             yield return null;
         }
 
-        rb.simulated = false; // Desactivar físicas
         col.isTrigger = true; // Activar como trigger
     }
 }
