@@ -23,7 +23,6 @@ public abstract class Weapon : MonoBehaviour
             Debug.LogError("WeaponData no asignado en " + gameObject.name);
             return;
         }
-
         Debug.Log($"{weaponData.name} inicializado.");
     }
 
@@ -39,9 +38,11 @@ public abstract class Weapon : MonoBehaviour
         rb.simulated = true;
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(direction.normalized * force, ForceMode2D.Impulse);
-        col.enabled = true; // Habilitar colisiones
 
-        // Configurar el trigger tras quedarse quieta
+        col.enabled = true; // Habilitar colisiones
+        col.isTrigger = false;
+
+        gameObject.layer = 6; // Cambiar a Layer Mask 6
         StartCoroutine(EnableTriggerWhenStopped());
     }
 
@@ -50,11 +51,12 @@ public abstract class Weapon : MonoBehaviour
         yield return new WaitForSeconds(0.5f); // Esperar un tiempo para estabilizar el movimiento
 
         // Esperar hasta que el arma esté quieta
-        while (rb.linearVelocity.sqrMagnitude > 0.1f)
+        while (rb.linearVelocity.sqrMagnitude > 0.2f)
         {
             yield return null;
         }
 
         col.isTrigger = true; // Activar como trigger
+        gameObject.layer = 0; // Cambiar de nuevo a Layer Mask 0
     }
 }

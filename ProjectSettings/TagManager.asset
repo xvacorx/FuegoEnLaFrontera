@@ -6,14 +6,16 @@ TagManager:
   tags:
   - Enemy
   - Weapon
+  - Wall
+  - Obstacle
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
+  - Ignore Player
   - 
   - 
   - 
