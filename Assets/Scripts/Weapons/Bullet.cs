@@ -25,19 +25,19 @@ public class Bullet : MonoBehaviour
         transform.Translate(Vector3.up * speed * Time.deltaTime);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         // Detectar colisiones con enemigos, paredes, etc.
         if (other.CompareTag("Enemy"))
         {
             // Aplicar daño al enemigo
-            Enemy enemy = other.GetComponent<Enemy>();
-            if (enemy != null)
+            if (other.TryGetComponent(out Enemy enemy))
             {
-                enemy.TakeDamage(damage);
+                {
+                    enemy.TakeDamage(damage);
+                }
             }
 
-            // Desactivar la bala después de impactar
             DeactivateBullet();
         }
         else if (other.CompareTag("Wall") || other.CompareTag("Obstacle"))
