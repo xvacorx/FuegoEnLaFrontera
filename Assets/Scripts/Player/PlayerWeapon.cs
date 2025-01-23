@@ -87,7 +87,7 @@ public class PlayerWeapon : MonoBehaviour
         if (currentWeapon == null) return;
 
         Vector2 throwDirection = (Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - transform.position).normalized;
-        float throwForce = 10f;
+        float throwForce = 25f;
 
         currentWeapon.Throw(throwDirection, throwForce);
         currentWeapon = null; // Ya no tienes el arma equipada

@@ -51,7 +51,7 @@ public abstract class Weapon : MonoBehaviour
         yield return new WaitForSeconds(0.5f); // Esperar un tiempo para estabilizar el movimiento
 
         // Esperar hasta que el arma esté quieta
-        while (rb.linearVelocity.sqrMagnitude > 0.2f)
+        while (rb.linearVelocity.sqrMagnitude > 0.75f)
         {
             yield return null;
         }
