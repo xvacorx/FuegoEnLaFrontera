@@ -1,9 +1,6 @@
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Living
 {
-    public void TakeDamage(float damage)
-    {
-        Debug.Log("Damage Dealt: " + damage);
-    }
+
 }

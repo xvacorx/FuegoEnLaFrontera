@@ -18,10 +18,10 @@ MonoBehaviour:
   weaponPrefab: {fileID: 2564595614584343001, guid: bdc669083dcd30242aeeeedda5ad47f5, type: 3}
   bulletPrefab: {fileID: 1966798567696585799, guid: 0bc26dfc0585c88478c8817f7a94f96b, type: 3}
   fireRate: 2
-  ammoCapacity: 2
+  ammoCapacity: 6
   reloadTime: 3
   pelletCount: 5
-  spread: 10
+  spread: 15
   attackRange: 0
   attackSpeed: 0
   damage: 0
