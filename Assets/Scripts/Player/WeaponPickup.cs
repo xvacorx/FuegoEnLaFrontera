@@ -5,7 +5,7 @@ public class WeaponPickup : MonoBehaviour
 {
     private PlayerWeapon playerWeapon;
     private Firearm weaponOnGround;
-
+    private Firearm weaponDropped;
     private InputAction interactAction;
     private InputAction dropAction;
 
@@ -59,7 +59,7 @@ public class WeaponPickup : MonoBehaviour
     private void TryDropWeapon()
     {
         if (playerWeapon.currentWeapon == null) return;
-
+        weaponDropped = playerWeapon.currentWeapon;
         playerWeapon.DropWeapon();
         TryPickupWeapon();
     }
@@ -69,7 +69,7 @@ public class WeaponPickup : MonoBehaviour
         if (collision.TryGetComponent(out Firearm firearm) && firearm != playerWeapon.currentWeapon)
         {
             weaponOnGround = firearm;
-            if (playerWeapon.currentWeapon == null)
+            if (playerWeapon.currentWeapon == null && firearm != weaponDropped)
             {
                 TryPickupWeapon();
             }
@@ -80,7 +80,7 @@ public class WeaponPickup : MonoBehaviour
         if (other.TryGetComponent(out Firearm firearm) && firearm != playerWeapon.currentWeapon)
         {
             weaponOnGround = firearm;
-            if (playerWeapon.currentWeapon == null)
+            if (playerWeapon.currentWeapon == null && firearm != weaponDropped)
             {
                 TryPickupWeapon();
             }
@@ -92,6 +92,7 @@ public class WeaponPickup : MonoBehaviour
         if (collision.TryGetComponent(out Firearm firearm) && firearm == weaponOnGround)
         {
             weaponOnGround = null;
+            weaponDropped = null;
         }
     }
 }
