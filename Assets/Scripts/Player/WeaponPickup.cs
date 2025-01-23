@@ -5,7 +5,6 @@ public class WeaponPickup : MonoBehaviour
 {
     private PlayerWeapon playerWeapon;
     private Firearm weaponOnGround;
-    private bool isNearWeapon;
 
     private InputAction interactAction;
     private InputAction dropAction;
@@ -15,6 +14,9 @@ public class WeaponPickup : MonoBehaviour
         var inputActions = new InputSystem_Actions();
         interactAction = inputActions.Player.Interact;
         dropAction = inputActions.Player.Drop;
+
+        interactAction.performed += _ => TryPickupWeapon();
+        dropAction.performed += _ => TryDropWeapon();
     }
 
     private void OnEnable()
@@ -29,24 +31,37 @@ public class WeaponPickup : MonoBehaviour
         dropAction.Disable();
     }
 
-    private void Start() => playerWeapon = GetComponent<PlayerWeapon>();
-
-    private void Update()
+    private void Start()
     {
-        if (interactAction.triggered) { Debug.Log("Interaction"); }
-        if (dropAction.triggered) { Debug.Log("Drop Action"); }
-        if (interactAction.triggered && isNearWeapon && weaponOnGround != null)
+        playerWeapon = GetComponent<PlayerWeapon>();
+        if (playerWeapon == null)
         {
-            Debug.Log("Weapon Pickup");
+            Debug.LogError("PlayerWeapon component is missing on the player.");
+        }
+    }
+
+    private void TryPickupWeapon()
+    {
+        if (weaponOnGround == null || weaponOnGround == playerWeapon.currentWeapon) return;
+
+        if (playerWeapon.currentWeapon == null)
+        {
             playerWeapon.EquipWeapon(weaponOnGround);
             weaponOnGround = null;
-            isNearWeapon = false;
         }
-
-        if (dropAction.triggered && playerWeapon.currentWeapon != null)
+        else
         {
-            playerWeapon.DropWeapon();
+            playerWeapon.EquipWeapon(weaponOnGround);
+            weaponOnGround = null;
         }
+    }
+
+    private void TryDropWeapon()
+    {
+        if (playerWeapon.currentWeapon == null) return;
+
+        playerWeapon.DropWeapon();
+        TryPickupWeapon();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -54,7 +69,21 @@ public class WeaponPickup : MonoBehaviour
         if (collision.TryGetComponent(out Firearm firearm) && firearm != playerWeapon.currentWeapon)
         {
             weaponOnGround = firearm;
-            isNearWeapon = true;
+            if (playerWeapon.currentWeapon == null)
+            {
+                TryPickupWeapon();
+            }
+        }
+    }
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.TryGetComponent(out Firearm firearm) && firearm != playerWeapon.currentWeapon)
+        {
+            weaponOnGround = firearm;
+            if (playerWeapon.currentWeapon == null)
+            {
+                TryPickupWeapon();
+            }
         }
     }
 
@@ -63,7 +92,6 @@ public class WeaponPickup : MonoBehaviour
         if (collision.TryGetComponent(out Firearm firearm) && firearm == weaponOnGround)
         {
             weaponOnGround = null;
-            isNearWeapon = false;
         }
     }
 }
