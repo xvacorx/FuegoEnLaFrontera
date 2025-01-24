@@ -9,6 +9,12 @@ public class WeaponData : ScriptableObject
         Firearm,
         Throwable
     }
+    public enum AmmoType
+    {
+        Shotgun,
+        Uzi,
+        Pistol
+    }
 
     [Header("General Information")]
     public string weaponName;
@@ -20,9 +26,11 @@ public class WeaponData : ScriptableObject
     public GameObject bulletPrefab;
     public float fireRate;
     public int ammoCapacity;
+    public AmmoType ammoType;
     public float reloadTime;
     public int pelletCount;
     public float spread;
+    public bool unloaded = false;
 
     [Header("Melee Settings")]
     public float attackRange;

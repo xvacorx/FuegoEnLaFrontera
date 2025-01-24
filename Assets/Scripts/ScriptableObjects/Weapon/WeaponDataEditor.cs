@@ -49,9 +49,11 @@ public class WeaponDataEditor : Editor
         weaponData.bulletPrefab = (GameObject)EditorGUILayout.ObjectField("Bullet Prefab", weaponData.bulletPrefab, typeof(GameObject), false);
         weaponData.fireRate = EditorGUILayout.FloatField("Fire Rate", weaponData.fireRate);
         weaponData.ammoCapacity = EditorGUILayout.IntField("Ammo Capacity", weaponData.ammoCapacity);
+        weaponData.ammoType = (WeaponData.AmmoType)EditorGUILayout.EnumPopup("Ammo Type", weaponData.ammoType);
         weaponData.reloadTime = EditorGUILayout.FloatField("Reload Time", weaponData.reloadTime);
         weaponData.pelletCount = EditorGUILayout.IntField("Pellet Count", weaponData.pelletCount);
         weaponData.spread = EditorGUILayout.FloatField("Spread", weaponData.spread);
+        weaponData.unloaded = EditorGUILayout.Toggle("Unloaded?", weaponData.unloaded);
     }
 
     private void DrawMeleeSettings(WeaponData weaponData)

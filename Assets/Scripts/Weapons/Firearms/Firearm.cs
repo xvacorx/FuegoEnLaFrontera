@@ -4,11 +4,13 @@ using UnityEngine;
 public abstract class Firearm : Weapon
 {
     [SerializeField] protected Transform firepoint;
-    [SerializeField] protected int currentAmmo; // Munición actual
+    public int currentAmmo; // Munición actual
+    public bool unloaded;
     protected float nextFireTime = 0f; // Tiempo hasta el siguiente disparo
     protected override void Start()
     {
         base.Start();
+        unloaded = weaponData.unloaded;
         currentAmmo = weaponData.ammoCapacity; // Inicializar munición específica
     }
 

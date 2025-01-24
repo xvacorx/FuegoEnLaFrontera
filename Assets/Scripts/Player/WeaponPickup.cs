@@ -42,34 +42,41 @@ public class WeaponPickup : MonoBehaviour
 
     private void TryPickupWeapon()
     {
-        if (weaponOnGround == null || weaponOnGround == playerWeapon.currentWeapon) return;
+        if (weaponOnGround == null) return;
 
-        if (playerWeapon.currentWeapon == null)
-        {
-            playerWeapon.EquipWeapon(weaponOnGround);
-            weaponOnGround = null;
-        }
-        else
-        {
-            playerWeapon.EquipWeapon(weaponOnGround);
-            weaponOnGround = null;
-        }
+        playerWeapon.EquipWeapon(weaponOnGround);
+        playerWeapon.currentWeapon.unloaded = true;
+        weaponOnGround = null;
     }
-
     private void TryDropWeapon()
     {
         if (playerWeapon.currentWeapon == null) return;
         weaponDropped = playerWeapon.currentWeapon;
         playerWeapon.DropWeapon();
-        TryPickupWeapon();
+    }
+    private void TryReload()
+    {
+        if (playerWeapon.currentWeapon != null && weaponOnGround != null)
+        {
+            if (playerWeapon.currentWeapon.weaponData.ammoType == weaponOnGround.weaponData.ammoType)
+            {
+                if (weaponOnGround.currentAmmo > 0 && weaponOnGround.unloaded == false)
+                {
+                    playerWeapon.currentWeapon.currentAmmo += weaponOnGround.currentAmmo;
+                    weaponOnGround.currentAmmo = 0;
+                    weaponOnGround.unloaded = true;
+                }
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out Firearm firearm) && firearm != playerWeapon.currentWeapon)
         {
+            TryReload();
             weaponOnGround = firearm;
-            if (playerWeapon.currentWeapon == null && firearm != weaponDropped)
+            if (playerWeapon.currentWeapon == null && firearm != weaponDropped && firearm.currentAmmo > 0)
             {
                 TryPickupWeapon();
             }
@@ -79,8 +86,9 @@ public class WeaponPickup : MonoBehaviour
     {
         if (other.TryGetComponent(out Firearm firearm) && firearm != playerWeapon.currentWeapon)
         {
+            TryReload();
             weaponOnGround = firearm;
-            if (playerWeapon.currentWeapon == null && firearm != weaponDropped)
+            if (playerWeapon.currentWeapon == null && firearm != weaponDropped && firearm.currentAmmo > 0)
             {
                 TryPickupWeapon();
             }

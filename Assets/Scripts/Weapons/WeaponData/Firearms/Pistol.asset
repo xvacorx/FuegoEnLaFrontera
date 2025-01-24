@@ -19,6 +19,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1966798567696585799, guid: 0bc26dfc0585c88478c8817f7a94f96b, type: 3}
   fireRate: 1
   ammoCapacity: 10
+  ammoType: 2
   reloadTime: 2
   pelletCount: 1
   spread: 0
