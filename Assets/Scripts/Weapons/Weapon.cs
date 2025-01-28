@@ -48,7 +48,7 @@ public abstract class Weapon : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        while (rb.linearVelocity.sqrMagnitude > 0.75f)
+        while (rb.linearVelocity.sqrMagnitude > 1.5f)
         {
             yield return null;
         }

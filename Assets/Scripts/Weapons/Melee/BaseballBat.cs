@@ -20,12 +20,8 @@ public class BaseballBat : MeleeWeapon
             // Comprobamos si el enemigo tiene el componente Enemy
             if (enemy.TryGetComponent(out Enemy enemyScript))
             {
-                // Aplicamos daño solo si no ha sido golpeado en este ciclo de ataque
-                if (!enemyScript.hasBeenHitThisAttack)
-                {
-                    enemyScript.TakeDamage(weaponData.attackDamage);
-                    PushEnemy(enemy); // Empujar al enemigo hacia atrás
-                }
+                enemyScript.TakeDamage(weaponData.attackDamage);
+                PushEnemy(enemy); // Empujar al enemigo hacia atrás
             }
         }
 

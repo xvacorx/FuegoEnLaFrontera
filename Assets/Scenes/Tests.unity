@@ -517,7 +517,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 10
   isAlive: 1
-  hasBeenHitThisAttack: 0
 --- !u!50 &1521857530
 Rigidbody2D:
   serializedVersion: 5

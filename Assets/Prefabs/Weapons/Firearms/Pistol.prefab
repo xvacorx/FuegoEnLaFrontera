@@ -51,6 +51,7 @@ MonoBehaviour:
   weaponData: {fileID: 11400000, guid: 31ff89ab99d90a948b1c2e3fb9b3ac15, type: 2}
   firepoint: {fileID: 5944876985319515055}
   currentAmmo: 0
+  unloaded: 0
 --- !u!58 &7721328604243087240
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -100,7 +101,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 2
+  m_LinearDamping: 1.25
   m_AngularDamping: 4.5
   m_GravityScale: 0
   m_Material: {fileID: 6200000, guid: 7ef4fed715b0bcd4c872b0d424929f4f, type: 2}
