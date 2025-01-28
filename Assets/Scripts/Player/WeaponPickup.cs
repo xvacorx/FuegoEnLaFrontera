@@ -1,106 +1,76 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class WeaponPickup : MonoBehaviour
 {
     private PlayerWeapon playerWeapon;
-    private Firearm weaponOnGround;
-    private Firearm weaponDropped;
-    private InputAction interactAction;
-    private InputAction dropAction;
-
-    private void Awake()
-    {
-        var inputActions = new InputSystem_Actions();
-        interactAction = inputActions.Player.Interact;
-        dropAction = inputActions.Player.Drop;
-
-        interactAction.performed += _ => TryPickupWeapon();
-        dropAction.performed += _ => TryDropWeapon();
-    }
+    private Weapon weaponOnGround;  // Cambiado a Weapon para que funcione con cualquier arma
+    private Weapon weaponDropped;
 
     private void OnEnable()
     {
-        interactAction.Enable();
-        dropAction.Enable();
+        var input = InputManager.Instance;
+        input.InteractAction.Enable();
+        input.DropAction.Enable();
+        input.InteractAction.performed += _ => TryPickupWeapon();
+        input.DropAction.performed += _ => TryDropWeapon();
     }
 
     private void OnDisable()
     {
-        interactAction.Disable();
-        dropAction.Disable();
+        var input = InputManager.Instance;
+        input.InteractAction.Disable();
+        input.DropAction.Disable();
     }
 
     private void Start()
     {
         playerWeapon = GetComponent<PlayerWeapon>();
-        if (playerWeapon == null)
-        {
-            Debug.LogError("PlayerWeapon component is missing on the player.");
-        }
+        if (!playerWeapon) Debug.LogError("PlayerWeapon component missing.");
     }
 
     private void TryPickupWeapon()
     {
         if (weaponOnGround == null) return;
-
-        playerWeapon.EquipWeapon(weaponOnGround);
-        playerWeapon.currentWeapon.unloaded = true;
-        weaponOnGround = null;
+        playerWeapon.EquipWeapon(weaponOnGround);  // Equipa el arma
+        weaponOnGround = null;  // Elimina el arma del suelo una vez recogida
     }
+
     private void TryDropWeapon()
     {
         if (playerWeapon.currentWeapon == null) return;
         weaponDropped = playerWeapon.currentWeapon;
         playerWeapon.DropWeapon();
     }
-    private void TryReload()
-    {
-        if (playerWeapon.currentWeapon != null && weaponOnGround != null)
-        {
-            if (playerWeapon.currentWeapon.weaponData.ammoType == weaponOnGround.weaponData.ammoType)
-            {
-                if (weaponOnGround.currentAmmo > 0 && weaponOnGround.unloaded == false)
-                {
-                    playerWeapon.currentWeapon.currentAmmo += weaponOnGround.currentAmmo;
-                    weaponOnGround.currentAmmo = 0;
-                    weaponOnGround.unloaded = true;
-                }
-            }
-        }
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out Firearm firearm) && firearm != playerWeapon.currentWeapon)
-        {
-            TryReload();
-            weaponOnGround = firearm;
-            if (playerWeapon.currentWeapon == null && firearm != weaponDropped && firearm.currentAmmo > 0)
-            {
-                TryPickupWeapon();
-            }
-        }
+        HandleWeaponTrigger(collision);
     }
-    private void OnTriggerStay2D(Collider2D other)
+
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (other.TryGetComponent(out Firearm firearm) && firearm != playerWeapon.currentWeapon)
-        {
-            TryReload();
-            weaponOnGround = firearm;
-            if (playerWeapon.currentWeapon == null && firearm != weaponDropped && firearm.currentAmmo > 0)
-            {
-                TryPickupWeapon();
-            }
-        }
+        HandleWeaponTrigger(collision);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out Firearm firearm) && firearm == weaponOnGround)
+        if (collision.TryGetComponent(out Weapon weapon) && weapon == weaponOnGround)
         {
             weaponOnGround = null;
             weaponDropped = null;
+        }
+    }
+
+    private void HandleWeaponTrigger(Collider2D collision)
+    {
+        // Se detecta cualquier tipo de Weapon (no solo Firearm)
+        if (collision.TryGetComponent(out Weapon weapon) && weapon != playerWeapon.currentWeapon)
+        {
+            weaponOnGround = weapon;  // Asigna el arma en el suelo
+            if (playerWeapon.currentWeapon == null && weapon != weaponDropped)
+            {
+                TryPickupWeapon();  // Permite recoger el arma si no hay ninguna equipada
+            }
         }
     }
 }

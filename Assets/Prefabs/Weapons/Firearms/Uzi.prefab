@@ -169,6 +169,7 @@ MonoBehaviour:
   weaponData: {fileID: 11400000, guid: 7d7db68f11d22b04aab4b54cfb3173d7, type: 2}
   firepoint: {fileID: 8774658512331373355}
   currentAmmo: 0
+  unloaded: 0
 --- !u!58 &5842648798123679511
 CircleCollider2D:
   m_ObjectHideFlags: 0

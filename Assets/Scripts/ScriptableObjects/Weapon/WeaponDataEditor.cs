@@ -62,7 +62,7 @@ public class WeaponDataEditor : Editor
         EditorGUILayout.LabelField("Melee Settings", EditorStyles.boldLabel);
         weaponData.attackRange = EditorGUILayout.FloatField("Attack Range", weaponData.attackRange);
         weaponData.attackSpeed = EditorGUILayout.FloatField("Attack Speed", weaponData.attackSpeed);
-        weaponData.damage = EditorGUILayout.IntField("Damage", weaponData.damage);
+        weaponData.attackDamage = EditorGUILayout.IntField("Damage", weaponData.attackDamage);
     }
 
     private void DrawThrowableSettings(WeaponData weaponData)

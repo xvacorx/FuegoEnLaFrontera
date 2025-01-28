@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c8ca9b7602ce8742bafc30ff5e5ccd2, type: 3}
-  m_Name: Pistol
+  m_Name: BaseballBat
   m_EditorClassIdentifier: 
-  weaponName: Pistol
-  weaponType: 1
+  weaponName: BaseballBat
+  weaponType: 0
   icon: {fileID: 0}
-  weaponPrefab: {fileID: 263108168170314946, guid: 708c3f2d294dc1247bacc2f693346f96, type: 3}
-  bulletPrefab: {fileID: 1966798567696585799, guid: 0bc26dfc0585c88478c8817f7a94f96b, type: 3}
-  fireRate: 1
-  ammoCapacity: 10
-  ammoType: 2
-  reloadTime: 2
-  pelletCount: 1
+  weaponPrefab: {fileID: 2530828950204308443, guid: 0b95ae4a5d1f3ea47ae769a3eccd220f, type: 3}
+  bulletPrefab: {fileID: 0}
+  fireRate: 0
+  ammoCapacity: 0
+  ammoType: 0
+  reloadTime: 0
+  pelletCount: 0
   spread: 0
   unloaded: 0
-  attackRange: 0
-  attackSpeed: 0
-  damage: 0
+  attackRange: 1
+  attackSpeed: 1
+  attackDamage: 2
   throwForce: 0
   explosionRadius: 0
   explosionDamage: 0

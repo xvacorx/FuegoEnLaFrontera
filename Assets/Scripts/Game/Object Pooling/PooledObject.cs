@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PoolObject : MonoBehaviour
+public class PooledObject : MonoBehaviour
 {
     private ObjectPool objectPool;
 
@@ -15,6 +15,9 @@ public class PoolObject : MonoBehaviour
         {
             objectPool.ReturnObject(gameObject);
         }
-        else { Destroy(gameObject); }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }

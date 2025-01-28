@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class PlayerWeapon : MonoBehaviour
 {
     public Transform weaponHolder;
-    public Firearm currentWeapon;
+    public Weapon currentWeapon;  // Cambiado de Firearm a Weapon
     private InputAction attackAction;
     private InputAction throwAction;
 
@@ -27,7 +27,8 @@ public class PlayerWeapon : MonoBehaviour
         throwAction.Disable();
     }
 
-    public void EquipWeapon(Firearm weaponOnGround)
+    // Cambiado para aceptar cualquier tipo de Weapon
+    public void EquipWeapon(Weapon weaponOnGround)
     {
         if (currentWeapon != null) DropWeapon();
 
@@ -43,7 +44,8 @@ public class PlayerWeapon : MonoBehaviour
         currentWeapon = null;
     }
 
-    private void AttachWeapon(Firearm weapon)
+    // Cambiado para aceptar cualquier tipo de Weapon
+    private void AttachWeapon(Weapon weapon)
     {
         weapon.transform.SetParent(weaponHolder);
         weapon.transform.localPosition = Vector3.zero;
@@ -57,7 +59,8 @@ public class PlayerWeapon : MonoBehaviour
         }
     }
 
-    private void DetachWeapon(Firearm weapon)
+    // Cambiado para aceptar cualquier tipo de Weapon
+    private void DetachWeapon(Weapon weapon)
     {
         weapon.transform.SetParent(null);
         weapon.transform.position = transform.position + transform.forward;
@@ -72,7 +75,7 @@ public class PlayerWeapon : MonoBehaviour
         {
             if (attackAction.IsPressed())
             {
-                currentWeapon.Shoot();
+                currentWeapon.Attack();  // Ahora llama a Attack() en lugar de Shoot()
             }
 
             if (throwAction.triggered)
@@ -89,7 +92,7 @@ public class PlayerWeapon : MonoBehaviour
         Vector2 throwDirection = (Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - transform.position).normalized;
         float throwForce = 25f;
 
-        currentWeapon.Throw(throwDirection, throwForce);
+        currentWeapon.Throw(throwDirection, throwForce);  // Lanza cualquier tipo de Weapon
         currentWeapon = null; // Ya no tienes el arma equipada
     }
 }

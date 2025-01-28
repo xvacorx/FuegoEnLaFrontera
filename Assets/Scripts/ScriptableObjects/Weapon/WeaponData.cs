@@ -35,7 +35,7 @@ public class WeaponData : ScriptableObject
     [Header("Melee Settings")]
     public float attackRange;
     public float attackSpeed;
-    public int damage;
+    public int attackDamage;
 
     [Header("Throwable Settings")]
     public float throwForce;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
-    public WeaponData weaponData; // Datos del arma (ScriptableObject)
+    public WeaponData weaponData;
     private Rigidbody2D rb;
     private Collider2D col;
 
@@ -23,40 +23,37 @@ public abstract class Weapon : MonoBehaviour
             Debug.LogError("WeaponData no asignado en " + gameObject.name);
             return;
         }
-        Debug.Log($"{weaponData.name} inicializado.");
+        //Debug.Log($"{weaponData.name} inicializado.");
     }
 
-    // Método abstracto que todas las armas deben implementar
     public abstract void Attack();
 
-    // Lógica para lanzar el arma
     public virtual void Throw(Vector2 direction, float force)
     {
         if (rb == null || col == null) return;
 
-        transform.SetParent(null); // Desparentar el arma
+        transform.SetParent(null);
         rb.simulated = true;
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(direction.normalized * force, ForceMode2D.Impulse);
 
-        col.enabled = true; // Habilitar colisiones
+        col.enabled = true;
         col.isTrigger = false;
 
-        gameObject.layer = 6; // Cambiar a Layer Mask 6
+        gameObject.layer = 6;
         StartCoroutine(EnableTriggerWhenStopped());
     }
 
     private System.Collections.IEnumerator EnableTriggerWhenStopped()
     {
-        yield return new WaitForSeconds(0.5f); // Esperar un tiempo para estabilizar el movimiento
+        yield return new WaitForSeconds(0.5f);
 
-        // Esperar hasta que el arma esté quieta
         while (rb.linearVelocity.sqrMagnitude > 0.75f)
         {
             yield return null;
         }
 
-        col.isTrigger = true; // Activar como trigger
-        gameObject.layer = 0; // Cambiar de nuevo a Layer Mask 0
+        col.isTrigger = true;
+        gameObject.layer = 0;
     }
 }

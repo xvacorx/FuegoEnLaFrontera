@@ -4,14 +4,14 @@ using UnityEngine;
 public abstract class Firearm : Weapon
 {
     [SerializeField] protected Transform firepoint;
-    public int currentAmmo; // Munición actual
+    public int currentAmmo;
     public bool unloaded;
-    protected float nextFireTime = 0f; // Tiempo hasta el siguiente disparo
+    protected float nextFireTime = 0f;
     protected override void Start()
     {
         base.Start();
         unloaded = weaponData.unloaded;
-        currentAmmo = weaponData.ammoCapacity; // Inicializar munición específica
+        currentAmmo = weaponData.ammoCapacity;
     }
 
     public abstract void Shoot();
@@ -34,7 +34,6 @@ public abstract class Firearm : Weapon
             return;
         }
 
-        // Solicitar un objeto del pool en lugar de instanciarlo
         GameObject bullet = PoolManager.Instance.RequestObject("Bullet", weaponData.bulletPrefab.name);
 
         if (bullet != null)
