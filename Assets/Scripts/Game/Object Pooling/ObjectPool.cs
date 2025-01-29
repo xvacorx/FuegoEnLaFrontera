@@ -58,9 +58,11 @@ public class ObjectPool : MonoBehaviour
     {
         GameObject obj = Instantiate(prefab);
         RegisterObject(obj);
+        obj.SetActive(false);  // Desactivar el objeto recién creado
         Debug.Log($"Created new object: {obj.name}");
         return obj;
     }
+
 
     private void RegisterObject(GameObject obj)
     {
