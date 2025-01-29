@@ -19,7 +19,8 @@ public class ObjectPool : MonoBehaviour
         for (int i = 0; i < initialSize; i++)
         {
             GameObject obj = CreateObject();
-            ReturnObject(obj);
+            if (obj.activeSelf) { ReturnObject(obj); }
+
         }
     }
 
@@ -44,14 +45,12 @@ public class ObjectPool : MonoBehaviour
     {
         if (obj == null) return;
 
-        obj.SetActive(false);
-
-        // Asegurar que se reintegra al pool
         obj.transform.SetParent(transform);
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
 
         pool.Enqueue(obj);
+
         Debug.Log($"Returned {obj.name} to pool: {name}");
     }
 
