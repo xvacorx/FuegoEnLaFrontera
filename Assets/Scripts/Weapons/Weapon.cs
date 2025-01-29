@@ -23,7 +23,6 @@ public abstract class Weapon : MonoBehaviour
             Debug.LogError("WeaponData no asignado en " + gameObject.name);
             return;
         }
-        //Debug.Log($"{weaponData.name} inicializado.");
     }
 
     public abstract void Attack();

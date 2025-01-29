@@ -19,7 +19,7 @@ public class ObjectPool : MonoBehaviour
         for (int i = 0; i < initialSize; i++)
         {
             GameObject obj = CreateObject();
-            if (obj.activeSelf) { ReturnObject(obj); }
+            ReturnObject(obj);
 
         }
     }
@@ -50,7 +50,7 @@ public class ObjectPool : MonoBehaviour
         obj.transform.localRotation = Quaternion.identity;
 
         pool.Enqueue(obj);
-
+        if (obj.activeSelf) { obj.SetActive(false); }
         Debug.Log($"Returned {obj.name} to pool: {name}");
     }
 
@@ -58,7 +58,7 @@ public class ObjectPool : MonoBehaviour
     {
         GameObject obj = Instantiate(prefab);
         RegisterObject(obj);
-        obj.SetActive(false);  // Desactivar el objeto recién creado
+        obj.SetActive(false);  // Desactivar el objeto reciï¿½n creado
         Debug.Log($"Created new object: {obj.name}");
         return obj;
     }

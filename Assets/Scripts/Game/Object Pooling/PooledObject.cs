@@ -3,7 +3,7 @@ using UnityEngine;
 public class PooledObject : MonoBehaviour
 {
     private ObjectPool objectPool;
-    private bool isReturningToPool = false; // Flag para asegurarnos de que solo se llame a ReturnToPool una vez por ciclo de desactivación
+    private bool isReturningToPool = false; // Flag para asegurarnos de que solo se llame a ReturnToPool una vez por ciclo de desactivaciï¿½n
 
     public void Initialize(ObjectPool pool)
     {
@@ -12,9 +12,9 @@ public class PooledObject : MonoBehaviour
 
     public void ReturnToPool()
     {
-        if (isReturningToPool) return; // Si ya está retornado, no hace nada
+        if (isReturningToPool) return; // Si ya estï¿½ retornado, no hace nada
 
-        isReturningToPool = true; // Marcar que el objeto está siendo retornado al pool
+        isReturningToPool = true; // Marcar que el objeto estï¿½ siendo retornado al pool
 
         if (objectPool != null)
         {
@@ -22,7 +22,7 @@ public class PooledObject : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"{gameObject.name} no está vinculado a ningún pool.");
+            Debug.LogWarning($"{gameObject.name} no estï¿½ vinculado a ningï¿½n pool.");
             Destroy(gameObject);
         }
     }
@@ -30,7 +30,7 @@ public class PooledObject : MonoBehaviour
     private void OnDisable()
     {
         // Solo devuelve a la pool si no ha sido ya retornado
-        // Agregar un pequeño retraso para asegurarse de que todo el proceso de desactivación termine correctamente
+        // Agregar un pequeï¿½o retraso para asegurarse de que todo el proceso de desactivaciï¿½n termine correctamente
         if (!isReturningToPool)
         {
             Invoke(nameof(ReturnToPoolDelayed), 0.1f); // Llamada retrasada para evitar conflictos
