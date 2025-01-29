@@ -9,7 +9,7 @@ public class PooledObject : MonoBehaviour
         objectPool = pool;
     }
 
-    private void OnDisable()
+    public void ReturnToPool()
     {
         if (objectPool != null)
         {
@@ -17,7 +17,18 @@ public class PooledObject : MonoBehaviour
         }
         else
         {
+            Debug.LogWarning($"{gameObject.name} no está vinculado a ningún pool.");
             Destroy(gameObject);
         }
+    }
+
+    private void OnDisable()
+    {
+        ReturnToPool();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        ReturnToPool();
     }
 }

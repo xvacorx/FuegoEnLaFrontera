@@ -41,11 +41,9 @@ public class BaseballBat : MeleeWeapon
             enemyRb.AddForce(pushDirection * pushForce, ForceMode2D.Impulse);
         }
     }
-
-    // Visualización del rango de ataque en el editor (opcional)
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-    }
+    //private void OnDrawGizmosSelected()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(transform.position, attackRange);
+    //}
 }

@@ -47,9 +47,7 @@ public abstract class MeleeWeapon : Weapon
         yield return new WaitForSeconds(1f / weaponData.attackSpeed);
         canAttack = true;
     }
-
-    // Visualización del rango de ataque en el editor (opcional)
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);

@@ -62,17 +62,4 @@ public class PoolManager : MonoBehaviour
         Debug.LogError($"Pool {poolName} in category {category} not found.");
         return null;
     }
-
-    public void ReturnObject(string category, string poolName, GameObject obj)
-    {
-        if (poolCategories.TryGetValue(category, out var pools))
-        {
-            if (pools.TryGetValue(poolName, out var pool))
-            {
-                pool.ReturnObject(obj);
-                return;
-            }
-        }
-        Debug.LogError($"Pool {poolName} in category {category} not found.");
-    }
 }
