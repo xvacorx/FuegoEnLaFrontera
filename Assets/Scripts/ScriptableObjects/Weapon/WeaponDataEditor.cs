@@ -8,14 +8,12 @@ public class WeaponDataEditor : Editor
     {
         WeaponData weaponData = (WeaponData)target;
 
-        // Dibujar los campos generales
         EditorGUILayout.LabelField("General Information", EditorStyles.boldLabel);
         weaponData.weaponName = EditorGUILayout.TextField("Weapon Name", weaponData.weaponName);
         weaponData.weaponType = (WeaponData.WeaponType)EditorGUILayout.EnumPopup("Weapon Type", weaponData.weaponType);
         weaponData.icon = (Sprite)EditorGUILayout.ObjectField("Icon", weaponData.icon, typeof(Sprite), false);
         weaponData.weaponPrefab = (GameObject)EditorGUILayout.ObjectField("Weapon Prefab", weaponData.weaponPrefab, typeof(GameObject), false);
 
-        // Mostrar campos condicionalmente
         switch (weaponData.weaponType)
         {
             case WeaponData.WeaponType.Firearm:
@@ -29,13 +27,11 @@ public class WeaponDataEditor : Editor
                 break;
         }
 
-        // Campos comunes de Audio y Efectos
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Audio & Effects", EditorStyles.boldLabel);
         weaponData.attackSound = (AudioClip)EditorGUILayout.ObjectField("Attack Sound", weaponData.attackSound, typeof(AudioClip), false);
         weaponData.attackEffect = (ParticleSystem)EditorGUILayout.ObjectField("Attack Effect", weaponData.attackEffect, typeof(ParticleSystem), false);
 
-        // Guardar los cambios
         if (GUI.changed)
         {
             EditorUtility.SetDirty(weaponData);

@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class PlayerWeapon : MonoBehaviour
 {
     public Transform weaponHolder;
-    public Weapon currentWeapon;  // Cambiado de Firearm a Weapon
+    public Weapon currentWeapon;
     private InputAction attackAction;
     private InputAction throwAction;
 
@@ -27,7 +27,6 @@ public class PlayerWeapon : MonoBehaviour
         throwAction.Disable();
     }
 
-    // Cambiado para aceptar cualquier tipo de Weapon
     public void EquipWeapon(Weapon weaponOnGround)
     {
         if (currentWeapon != null) DropWeapon();
@@ -44,7 +43,6 @@ public class PlayerWeapon : MonoBehaviour
         currentWeapon = null;
     }
 
-    // Cambiado para aceptar cualquier tipo de Weapon
     private void AttachWeapon(Weapon weapon)
     {
         weapon.transform.SetParent(weaponHolder);
@@ -59,7 +57,6 @@ public class PlayerWeapon : MonoBehaviour
         }
     }
 
-    // Cambiado para aceptar cualquier tipo de Weapon
     private void DetachWeapon(Weapon weapon)
     {
         weapon.transform.SetParent(null);
@@ -75,7 +72,7 @@ public class PlayerWeapon : MonoBehaviour
         {
             if (attackAction.IsPressed())
             {
-                currentWeapon.Attack();  // Ahora llama a Attack() en lugar de Shoot()
+                currentWeapon.Attack();
             }
 
             if (throwAction.triggered)
@@ -92,7 +89,7 @@ public class PlayerWeapon : MonoBehaviour
         Vector2 throwDirection = (Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - transform.position).normalized;
         float throwForce = 25f;
 
-        currentWeapon.Throw(throwDirection, throwForce);  // Lanza cualquier tipo de Weapon
-        currentWeapon = null; // Ya no tienes el arma equipada
+        currentWeapon.Throw(throwDirection, throwForce);
+        currentWeapon = null;
     }
 }
