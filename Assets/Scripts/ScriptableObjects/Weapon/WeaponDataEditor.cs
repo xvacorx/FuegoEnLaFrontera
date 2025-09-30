@@ -4,70 +4,178 @@ using UnityEngine;
 [CustomEditor(typeof(WeaponData))]
 public class WeaponDataEditor : Editor
 {
+    // Properties to cache for better performance and robust handling
+    private SerializedProperty weaponTypeProp;
+    private SerializedProperty ammoTypeProp;
+    // private SerializedProperty limitedUsesProp; // ELIMINADO
+    private SerializedProperty unloadedProp;
+    private SerializedProperty isAreaEffectProp;
+
+    private void OnEnable()
+    {
+        // Find and cache all properties needed for conditional logic and drawing
+        weaponTypeProp = serializedObject.FindProperty("weaponType");
+        ammoTypeProp = serializedObject.FindProperty("ammoType");
+        // limitedUsesProp = serializedObject.FindProperty("limitedUses"); // ELIMINADO
+        unloadedProp = serializedObject.FindProperty("unloaded");
+        isAreaEffectProp = serializedObject.FindProperty("isAreaEffect");
+    }
+
     public override void OnInspectorGUI()
     {
-        WeaponData weaponData = (WeaponData)target;
+        serializedObject.Update();
 
-        EditorGUILayout.LabelField("General Information", EditorStyles.boldLabel);
-        weaponData.weaponName = EditorGUILayout.TextField("Weapon Name", weaponData.weaponName);
-        weaponData.weaponType = (WeaponData.WeaponType)EditorGUILayout.EnumPopup("Weapon Type", weaponData.weaponType);
-        weaponData.icon = (Sprite)EditorGUILayout.ObjectField("Icon", weaponData.icon, typeof(Sprite), false);
-        weaponData.weaponPrefab = (GameObject)EditorGUILayout.ObjectField("Weapon Prefab", weaponData.weaponPrefab, typeof(GameObject), false);
+        // 1. Draw Global Sections
+        DrawGeneralSection();
+        DrawPoolIntegrationSection();
+        DrawThrowingMechanics();
+        DrawGauchoMechanics(); // <--- Ahora es una sección vacía pero se mantiene por estructura
 
-        switch (weaponData.weaponType)
+        // Check if weaponType changed and auto-adjust AmmoType
+        CheckAndAdjustAmmoType();
+
+        // 2. Conditional Section (Type-Specific)
+        EditorGUILayout.Space(10);
+        EditorGUILayout.LabelField("Type-Specific Settings", EditorStyles.boldLabel);
+
+        WeaponData.WeaponType currentType = (WeaponData.WeaponType)weaponTypeProp.enumValueIndex;
+
+        switch (currentType)
         {
-            case WeaponData.WeaponType.Firearm:
-                DrawFirearmSettings(weaponData);
-                break;
             case WeaponData.WeaponType.Melee:
-                DrawMeleeSettings(weaponData);
+                DrawMeleeSettings();
+                break;
+            case WeaponData.WeaponType.Firearm:
+                DrawFirearmSettings();
                 break;
             case WeaponData.WeaponType.Throwable:
-                DrawThrowableSettings(weaponData);
+                DrawThrowableSettings();
                 break;
         }
 
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Audio & Effects", EditorStyles.boldLabel);
-        weaponData.attackSound = (AudioClip)EditorGUILayout.ObjectField("Attack Sound", weaponData.attackSound, typeof(AudioClip), false);
-        weaponData.attackEffect = (ParticleSystem)EditorGUILayout.ObjectField("Attack Effect", weaponData.attackEffect, typeof(ParticleSystem), false);
+        // 3. Draw Audio Section (Always visible)
+        DrawAudioSection();
 
-        if (GUI.changed)
+        serializedObject.ApplyModifiedProperties();
+    }
+
+    // --- Core Logic Methods ---
+
+    private void CheckAndAdjustAmmoType()
+    {
+        WeaponData.WeaponType currentType = (WeaponData.WeaponType)weaponTypeProp.enumValueIndex;
+
+        // Si es Melee, Throwable o Environment, el AmmoType debe ser None
+        if (currentType == WeaponData.WeaponType.Melee ||
+            currentType == WeaponData.WeaponType.Throwable ||
+            currentType == WeaponData.WeaponType.Environment)
         {
-            EditorUtility.SetDirty(weaponData);
+            if (ammoTypeProp.enumValueIndex != (int)WeaponData.AmmoType.None)
+            {
+                ammoTypeProp.enumValueIndex = (int)WeaponData.AmmoType.None;
+            }
         }
     }
 
-    private void DrawFirearmSettings(WeaponData weaponData)
+    // --- Drawing Methods ---
+
+    private void DrawGeneralSection()
     {
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Firearm Settings", EditorStyles.boldLabel);
-        weaponData.bulletPrefab = (GameObject)EditorGUILayout.ObjectField("Bullet Prefab", weaponData.bulletPrefab, typeof(GameObject), false);
-        weaponData.fireRate = EditorGUILayout.FloatField("Fire Rate", weaponData.fireRate);
-        weaponData.ammoCapacity = EditorGUILayout.IntField("Ammo Capacity", weaponData.ammoCapacity);
-        weaponData.ammoType = (WeaponData.AmmoType)EditorGUILayout.EnumPopup("Ammo Type", weaponData.ammoType);
-        weaponData.reloadTime = EditorGUILayout.FloatField("Reload Time", weaponData.reloadTime);
-        weaponData.pelletCount = EditorGUILayout.IntField("Pellet Count", weaponData.pelletCount);
-        weaponData.spread = EditorGUILayout.FloatField("Spread", weaponData.spread);
-        weaponData.unloaded = EditorGUILayout.Toggle("Unloaded?", weaponData.unloaded);
+        EditorGUILayout.LabelField("General Information", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("weaponName"));
+        EditorGUILayout.PropertyField(weaponTypeProp);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("icon"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("weaponPrefab"));
     }
 
-    private void DrawMeleeSettings(WeaponData weaponData)
+    private void DrawPoolIntegrationSection()
     {
         EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Melee Settings", EditorStyles.boldLabel);
-        weaponData.attackRange = EditorGUILayout.FloatField("Attack Range", weaponData.attackRange);
-        weaponData.attackSpeed = EditorGUILayout.FloatField("Attack Speed", weaponData.attackSpeed);
-        weaponData.attackDamage = EditorGUILayout.IntField("Damage", weaponData.attackDamage);
+        EditorGUILayout.LabelField("Pool Integration", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("projectileCategory"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("projectilePoolName"));
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("effectCategory"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("effectPoolName"));
     }
 
-    private void DrawThrowableSettings(WeaponData weaponData)
+    private void DrawThrowingMechanics()
     {
         EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Throwable Settings", EditorStyles.boldLabel);
-        weaponData.throwForce = EditorGUILayout.FloatField("Throw Force", weaponData.throwForce);
-        weaponData.explosionRadius = EditorGUILayout.FloatField("Explosion Radius", weaponData.explosionRadius);
-        weaponData.explosionDamage = EditorGUILayout.FloatField("Explosion Damage", weaponData.explosionDamage);
-        weaponData.detonatesOnImpact = EditorGUILayout.Toggle("Detonates On Impact", weaponData.detonatesOnImpact);
+        EditorGUILayout.LabelField("Weapon Mechanics (Throwing)", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("throwForce"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("thrownImpactDamage"));
+    }
+
+    private void DrawGauchoMechanics()
+    {
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Weapon Mechanics (Gaucho Special)", EditorStyles.boldLabel);
+
+        // Sin contenido aquí, ya que 'alwaysAutoRecover' y 'limitedUses' fueron eliminados.
+    }
+
+    private void DrawMeleeSettings()
+    {
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("A. Melee Settings", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("attackDamage"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("attackRange"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("attackSpeed"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("hasPenetration"));
+    }
+
+    private void DrawFirearmSettings()
+    {
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("B. Firearm Settings", EditorStyles.boldLabel);
+
+        // Performance
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("projectileDamage"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("fireRate"));
+        EditorGUILayout.PropertyField(ammoTypeProp);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("reloadTime"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("pelletCount"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("spread"));
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Firearm Initial State", EditorStyles.miniLabel);
+
+        // State
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("ammoCapacity"));
+        EditorGUILayout.PropertyField(unloadedProp);
+
+        // Only show initialAmmo if the weapon isn't forced unloaded
+        if (!unloadedProp.boolValue)
+        {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("initialAmmo"));
+        }
+    }
+
+    private void DrawThrowableSettings()
+    {
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("C. Throwable/Explosive Settings", EditorStyles.boldLabel);
+
+        // Area Effect Logic (e.g., Molotov, Boleadoras)
+        EditorGUILayout.PropertyField(isAreaEffectProp);
+        if (isAreaEffectProp.boolValue)
+        {
+            EditorGUI.indentLevel++;
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("areaRadius"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("areaDamage"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("leavesPersistentEffect"));
+            EditorGUI.indentLevel--;
+        }
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("additionalStunTime"));
+    }
+
+    private void DrawAudioSection()
+    {
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Audio", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("attackSound"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("reloadSound"));
     }
 }

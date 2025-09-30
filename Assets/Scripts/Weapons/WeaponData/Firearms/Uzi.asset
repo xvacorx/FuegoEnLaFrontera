@@ -12,24 +12,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8ca9b7602ce8742bafc30ff5e5ccd2, type: 3}
   m_Name: Uzi
   m_EditorClassIdentifier: 
-  weaponName: Uzi
+  weaponName: 
   weaponType: 1
   icon: {fileID: 0}
-  weaponPrefab: {fileID: 6699479299839517356, guid: 51dc8046f3ef8164ca749fa57d4b7ec0, type: 3}
-  bulletPrefab: {fileID: 1966798567696585799, guid: 0bc26dfc0585c88478c8817f7a94f96b, type: 3}
-  fireRate: 10
-  ammoCapacity: 35
+  weaponPrefab: {fileID: 0}
+  projectileCategory: Projectiles
+  projectilePoolName: BasicBullet
+  effectCategory: Effects
+  effectPoolName: MuzzleFlash
+  throwForce: 15
+  thrownImpactDamage: 0.5
+  autoRecovery: 0
+  limitedUses: 0
+  totalUses: 3
+  attackDamage: 1
+  attackRange: 1.5
+  attackSpeed: 0.5
+  hasPenetration: 0
+  projectileDamage: 1
+  fireRate: 0.1
   ammoType: 1
   reloadTime: 2
   pelletCount: 1
-  spread: 7.5
+  spread: 0
+  ammoCapacity: 6
   unloaded: 0
-  attackRange: 0
-  attackSpeed: 0
-  attackDamage: 0
-  throwForce: 0
-  explosionRadius: 0
-  explosionDamage: 0
-  detonatesOnImpact: 0
+  initialAmmo: 6
+  isAreaEffect: 0
+  areaRadius: 3
+  areaDamage: 50
+  leavesPersistentEffect: 0
+  additionalStunTime: 0.5
   attackSound: {fileID: 0}
-  attackEffect: {fileID: 0}
+  reloadSound: {fileID: 0}

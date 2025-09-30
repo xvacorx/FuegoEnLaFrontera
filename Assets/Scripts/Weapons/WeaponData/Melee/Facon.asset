@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c8ca9b7602ce8742bafc30ff5e5ccd2, type: 3}
-  m_Name: Shotgun
+  m_Name: Facon
   m_EditorClassIdentifier: 
-  weaponName: 
-  weaponType: 1
+  weaponName: Facon
+  weaponType: 0
   icon: {fileID: 0}
   weaponPrefab: {fileID: 0}
   projectileCategory: Projectiles
@@ -22,7 +22,7 @@ MonoBehaviour:
   effectPoolName: MuzzleFlash
   throwForce: 15
   thrownImpactDamage: 0.5
-  autoRecovery: 0
+  alwaysAutoRecover: 0
   limitedUses: 0
   totalUses: 3
   attackDamage: 1
@@ -31,7 +31,7 @@ MonoBehaviour:
   hasPenetration: 0
   projectileDamage: 1
   fireRate: 0.1
-  ammoType: 3
+  ammoType: 0
   reloadTime: 2
   pelletCount: 1
   spread: 0
