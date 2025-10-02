@@ -51,7 +51,6 @@ public class ObjectPool : MonoBehaviour
 
         pool.Enqueue(obj);
         if (obj.activeSelf) { obj.SetActive(false); }
-        Debug.Log($"Returned {obj.name} to pool: {name}");
     }
 
     private GameObject CreateObject()
@@ -59,7 +58,6 @@ public class ObjectPool : MonoBehaviour
         GameObject obj = Instantiate(prefab);
         RegisterObject(obj);
         obj.SetActive(false);  // Desactivar el objeto reci�n creado
-        Debug.Log($"Created new object: {obj.name}");
         return obj;
     }
 

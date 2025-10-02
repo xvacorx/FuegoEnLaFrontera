@@ -8,8 +8,6 @@ public class Enemy : Living
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
-
-        Debug.Log($"{gameObject.name} ha recibido {damage} de daño");
     }
     private void Update()
     {

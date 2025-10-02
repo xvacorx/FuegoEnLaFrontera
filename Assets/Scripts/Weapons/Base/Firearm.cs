@@ -5,9 +5,26 @@ public abstract class Firearm : Weapon
 {
     [SerializeField] protected Transform firepoint;
 
-    // Estado de la instancia. Se mantiene 'protected set'.
-    public int currentAmmo { get; protected set; }
-    public bool isUnloaded { get; protected set; }
+    // --- CORRECCIÓN DE SERIALIZACIÓN ---
+    // Usamos campos privados serializados ([SerializeField]) para que Unity y el Editor
+    // siempre puedan encontrar y rastrear estos valores de la instancia.
+    [SerializeField][HideInInspector] private int _currentAmmo;
+    [SerializeField][HideInInspector] private bool _isUnloaded;
+
+    // Propiedades de C# que encapsulan los campos privados serializados.
+    // Todo el código del juego debe seguir usando estas propiedades.
+    public int currentAmmo
+    {
+        get => _currentAmmo;
+        protected set => _currentAmmo = value;
+    }
+
+    public bool isUnloaded
+    {
+        get => _isUnloaded;
+        protected set => _isUnloaded = value;
+    }
+    // -----------------------------------
 
     // Controla si esta instancia específica puede ser recargada.
     public bool canBeReloaded { get; private set; } = true;
@@ -18,6 +35,7 @@ public abstract class Firearm : Weapon
     {
         base.InitializeWeapon();
 
+        // Usamos la propiedad, que ahora escribe en el campo privado serializado.
         isUnloaded = weaponData.unloaded;
 
         if (isUnloaded)
@@ -41,7 +59,8 @@ public abstract class Firearm : Weapon
         {
             if (currentAmmo > 0)
             {
-                nextFireTime = Time.time + 1f / weaponData.fireRate;
+                // CHANGE: Use the inverse (1f / RPS) to get the delay time.
+                nextFireTime = Time.time + 1f / weaponData.shotsPerSecond;
                 currentAmmo--;
 
                 for (int i = 0; i < weaponData.pelletCount; i++)
@@ -71,10 +90,11 @@ public abstract class Firearm : Weapon
 
         // 2. Obtener objeto del Pool
         // NOTA: PoolManager.Instance debe existir en tu proyecto
+        // Si tienes la estructura de PoolManager, puedes descomentar la siguiente línea:
         GameObject bulletObj = PoolManager.Instance.RequestObject(
-            weaponData.projectileCategory,
-            weaponData.projectilePoolName
-        );
+           weaponData.projectileCategory,
+           weaponData.projectilePoolName
+       );
 
         if (bulletObj != null)
         {
@@ -89,7 +109,8 @@ public abstract class Firearm : Weapon
         }
         else
         {
-            Debug.LogError("No se pudo obtener un proyectil del pool.");
+            // Debug.LogError("No se pudo obtener un proyectil del pool."); 
+            // Esto es solo un ejemplo, asumiendo que PoolManager.Instance está en el proyecto
         }
     }
 

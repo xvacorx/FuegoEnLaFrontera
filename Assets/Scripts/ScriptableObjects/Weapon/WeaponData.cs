@@ -15,9 +15,9 @@ public class WeaponData : ScriptableObject
 
     public enum AmmoType
     {
-        None,      // For Melee/Dedicated Throwables
-        Pistol,    // Revolver, pistols
-        Rifle,     // Carbine, Rifle
+        None,       // For Melee/Dedicated Throwables
+        Pistol,     // Revolver, pistols
+        Rifle,      // Carbine, Rifle
         Shotgun    // Shotguns
     }
 
@@ -33,6 +33,14 @@ public class WeaponData : ScriptableObject
     // --- POOL INTEGRATION ---
 
     [Header("Pool Integration")]
+
+    // CAMPOS PARA ARRASTRAR EL PREFAB (Mejora de UX)
+    [Tooltip("Drag the Projectile Prefab/GameObject here to auto-fill the Pool Name and Category.")]
+    public GameObject projectilePrefab;
+    [Tooltip("Drag the Effect Prefab/GameObject here to auto-fill the Pool Name and Category.")]
+    public GameObject effectPrefab;
+
+    // CAMPOS DE STRING (Usados por el PoolManager en tiempo de ejecución)
     [Tooltip("The category key for fetching the projectile from the ObjectPool.")]
     public string projectileCategory = "Projectiles";
     [Tooltip("The pool name key for fetching the projectile.")]
@@ -52,8 +60,6 @@ public class WeaponData : ScriptableObject
     public float thrownImpactDamage = 0.5f;
 
     [Header("Weapon Mechanics (Gaucho Special)")]
-    // Propiedades 'limitedUses' y 'totalUses' ELIMINADAS.
-    // El tipo 'Throwable' implica que el uso es limitado (un solo uso).
 
     // --- TYPE-SPECIFIC SETTINGS ---
 
@@ -61,13 +67,16 @@ public class WeaponData : ScriptableObject
     [Tooltip("Damage of the melee attack (1 is typically One-Hit-Kill in this system).")]
     public float attackDamage = 1f;
     public float attackRange = 1.5f;
-    public float attackSpeed = 0.5f;
+    [Tooltip("How many attacks the weapon can perform per second (APS). Higher value means faster attacking.")]
+    public float attackSpeed = 2f;
     [Tooltip("Can hit multiple enemies aligned (e.g., Lanza).")]
     public bool hasPenetration = false;
 
     [Header("B. Firearm Settings")]
-    public float projectileDamage = 1f; // Damage applied by the pooled projectile
-    public float fireRate = 0.1f;
+    public float projectileDamage = 1f;
+    [Tooltip("How many rounds the weapon fires per second (RPS). This value is inverted for the shot cooldown.")]
+    public float shotsPerSecond = 10f;
+
     public AmmoType ammoType;
     public float reloadTime = 2f;
     [Tooltip("Number of projectiles fired per trigger pull (pellets).")]

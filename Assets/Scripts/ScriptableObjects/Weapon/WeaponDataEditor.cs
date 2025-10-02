@@ -4,37 +4,49 @@ using UnityEngine;
 [CustomEditor(typeof(WeaponData))]
 public class WeaponDataEditor : Editor
 {
-    // Properties to cache for better performance and robust handling
     private SerializedProperty weaponTypeProp;
     private SerializedProperty ammoTypeProp;
-    // private SerializedProperty limitedUsesProp; // ELIMINADO
     private SerializedProperty unloadedProp;
     private SerializedProperty isAreaEffectProp;
 
+    // Campos Pool String (Resultados del auto-relleno y editables manualmente)
+    private SerializedProperty projectileCategoryProp;
+    private SerializedProperty projectilePoolNameProp;
+    private SerializedProperty effectCategoryProp;
+    private SerializedProperty effectPoolNameProp;
+
+    // --- CAMPOS TEMPORALES NO SERIALIZADOS PARA ARRASTRE ---
+    // Usados para capturar la referencia de un GameObject de la escena o Prefab.
+    private Object _tempProjectileRef;
+    private Object _tempEffectRef;
+    // -----------------------------------------------------------------
+
     private void OnEnable()
     {
-        // Find and cache all properties needed for conditional logic and drawing
+        // Cachear propiedades existentes
         weaponTypeProp = serializedObject.FindProperty("weaponType");
         ammoTypeProp = serializedObject.FindProperty("ammoType");
-        // limitedUsesProp = serializedObject.FindProperty("limitedUses"); // ELIMINADO
         unloadedProp = serializedObject.FindProperty("unloaded");
         isAreaEffectProp = serializedObject.FindProperty("isAreaEffect");
+
+        // Cachear propiedades de String
+        projectileCategoryProp = serializedObject.FindProperty("projectileCategory");
+        projectilePoolNameProp = serializedObject.FindProperty("projectilePoolName");
+        effectCategoryProp = serializedObject.FindProperty("effectCategory");
+        effectPoolNameProp = serializedObject.FindProperty("effectPoolName");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
-        // 1. Draw Global Sections
         DrawGeneralSection();
         DrawPoolIntegrationSection();
         DrawThrowingMechanics();
-        DrawGauchoMechanics(); // <--- Ahora es una sección vacía pero se mantiene por estructura
+        DrawGauchoMechanics();
 
-        // Check if weaponType changed and auto-adjust AmmoType
         CheckAndAdjustAmmoType();
 
-        // 2. Conditional Section (Type-Specific)
         EditorGUILayout.Space(10);
         EditorGUILayout.LabelField("Type-Specific Settings", EditorStyles.boldLabel);
 
@@ -53,7 +65,6 @@ public class WeaponDataEditor : Editor
                 break;
         }
 
-        // 3. Draw Audio Section (Always visible)
         DrawAudioSection();
 
         serializedObject.ApplyModifiedProperties();
@@ -92,11 +103,70 @@ public class WeaponDataEditor : Editor
     {
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Pool Integration", EditorStyles.boldLabel);
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("projectileCategory"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("projectilePoolName"));
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("effectCategory"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("effectPoolName"));
+        // 1. PROYECTIL
+        DrawPoolReferenceFields("Projectile", ref _tempProjectileRef, projectileCategoryProp, projectilePoolNameProp);
+
+        EditorGUILayout.Space(5);
+
+        // 2. EFECTO
+        DrawPoolReferenceFields("Effect", ref _tempEffectRef, effectCategoryProp, effectPoolNameProp);
+    }
+
+    private void DrawPoolReferenceFields(
+        string label,
+        ref Object tempRef,
+        SerializedProperty categoryProp,
+        SerializedProperty poolNameProp)
+    {
+        EditorGUILayout.LabelField($"{label} Pool References", EditorStyles.boldLabel);
+        EditorGUI.indentLevel++;
+
+        // CAMPO TEMPORAL PARA ARRASTRE (DRAG HERE)
+        EditorGUI.BeginChangeCheck();
+        tempRef = EditorGUILayout.ObjectField(new GUIContent($"DRAG {label} HERE to Auto-Fill"), tempRef, typeof(GameObject), true);
+        if (EditorGUI.EndChangeCheck() && tempRef != null)
+        {
+            // Si el objeto se arrastró, extraemos los nombres y los guardamos como strings
+            UpdatePoolNames(tempRef as GameObject, categoryProp, poolNameProp);
+
+            // Borrar la referencia temporal, ya que no se puede serializar al SO
+            tempRef = null;
+            // Aplicamos cambios inmediatamente para que se reflejen en los campos de string
+            serializedObject.ApplyModifiedProperties();
+            // Re-actualizamos el objeto serializado para el próximo dibujo
+            serializedObject.Update();
+        }
+
+        // CAMPOS DE STRING (Editables manualmente)
+        EditorGUILayout.PropertyField(categoryProp);
+        EditorGUILayout.PropertyField(poolNameProp);
+
+        EditorGUI.indentLevel--;
+    }
+
+    /// <summary>
+    /// Extrae el nombre del GameObject (Pool Name) y el nombre del padre (Category) 
+    /// y actualiza las propiedades Serializadas.
+    /// </summary>
+    private void UpdatePoolNames(GameObject go, SerializedProperty categoryProp, SerializedProperty poolNameProp)
+    {
+        if (go != null)
+        {
+            // 1. Pool Name es el nombre del GameObject
+            poolNameProp.stringValue = go.name;
+
+            // 2. Category Name es el nombre del padre (si existe)
+            if (go.transform.parent != null)
+            {
+                categoryProp.stringValue = go.transform.parent.name;
+            }
+            else
+            {
+                // Si no tiene padre (es raíz), usamos un valor por defecto
+                categoryProp.stringValue = "General";
+            }
+        }
     }
 
     private void DrawThrowingMechanics()
@@ -111,8 +181,6 @@ public class WeaponDataEditor : Editor
     {
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Weapon Mechanics (Gaucho Special)", EditorStyles.boldLabel);
-
-        // Sin contenido aquí, ya que 'alwaysAutoRecover' y 'limitedUses' fueron eliminados.
     }
 
     private void DrawMeleeSettings()
@@ -130,9 +198,8 @@ public class WeaponDataEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("B. Firearm Settings", EditorStyles.boldLabel);
 
-        // Performance
         EditorGUILayout.PropertyField(serializedObject.FindProperty("projectileDamage"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("fireRate"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("shotsPerSecond"));
         EditorGUILayout.PropertyField(ammoTypeProp);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("reloadTime"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("pelletCount"));
@@ -141,11 +208,9 @@ public class WeaponDataEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Firearm Initial State", EditorStyles.miniLabel);
 
-        // State
         EditorGUILayout.PropertyField(serializedObject.FindProperty("ammoCapacity"));
         EditorGUILayout.PropertyField(unloadedProp);
 
-        // Only show initialAmmo if the weapon isn't forced unloaded
         if (!unloadedProp.boolValue)
         {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("initialAmmo"));
@@ -157,7 +222,6 @@ public class WeaponDataEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("C. Throwable/Explosive Settings", EditorStyles.boldLabel);
 
-        // Area Effect Logic (e.g., Molotov, Boleadoras)
         EditorGUILayout.PropertyField(isAreaEffectProp);
         if (isAreaEffectProp.boolValue)
         {

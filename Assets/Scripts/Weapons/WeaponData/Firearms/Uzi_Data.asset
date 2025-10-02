@@ -10,34 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c8ca9b7602ce8742bafc30ff5e5ccd2, type: 3}
-  m_Name: Facon
+  m_Name: Uzi_Data
   m_EditorClassIdentifier: 
-  weaponName: Facon
-  weaponType: 0
+  weaponName: Uzi
+  weaponType: 1
   icon: {fileID: 0}
   weaponPrefab: {fileID: 0}
+  projectilePrefab: {fileID: 0}
+  effectPrefab: {fileID: 0}
   projectileCategory: Projectiles
   projectilePoolName: BasicBullet
   effectCategory: Effects
   effectPoolName: MuzzleFlash
-  throwForce: 15
+  throwForce: 5
   thrownImpactDamage: 0.5
-  alwaysAutoRecover: 0
-  limitedUses: 0
-  totalUses: 3
   attackDamage: 1
   attackRange: 1.5
   attackSpeed: 0.5
   hasPenetration: 0
   projectileDamage: 1
-  fireRate: 0.1
-  ammoType: 0
+  shotsPerSecond: 3
+  ammoType: 1
   reloadTime: 2
   pelletCount: 1
-  spread: 0
-  ammoCapacity: 6
+  spread: 2
+  ammoCapacity: 15
   unloaded: 0
-  initialAmmo: 6
+  initialAmmo: 15
   isAreaEffect: 0
   areaRadius: 3
   areaDamage: 50
